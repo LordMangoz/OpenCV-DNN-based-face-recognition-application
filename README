@@ -21,3 +21,6 @@ Pull the project, and install the dependencies:
     
 Run:
     make
+
+    Compile with:
+    g++ face_detect.cpp main.cpp -o face_recognition $(pkg-config --cflags --libs opencv4)
