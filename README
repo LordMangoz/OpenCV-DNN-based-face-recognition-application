@@ -24,3 +24,17 @@ Run:
 
     Compile with:
     g++ face_detect.cpp main.cpp -o face_recognition $(pkg-config --cflags --libs opencv4)
+
+## Dataset
+Collect 10-20 photos per subject.
+Include different lighting, facial angles, and expressions.
+Separate photos into training and testing sets to avoid the system testing on images it has already learned.
+
+Use OpenCV code to read each photo, detect the face in the photo, align it, and extract its embedding.
+Save embeddings and the subject's identifier to create the initial recognition database.
+
+Implement recognition when a new image is provided by extracting its embedding and comparing it with the stored embeddings.
+Assign the closest known identity if its simlilarity passes the threshold, or return as "unknown".
+
+Benchmark by measuring how long it takes to enroll subjects and recognize a new face.
+Track correct/incorrect matches and unknown faces.
