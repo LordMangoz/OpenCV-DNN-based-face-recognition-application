@@ -30,8 +30,8 @@ int main(int argc, char** argv)
         return 0;
     }
 
-    String fd_modelPath = parser.get<String>("fd_model");
-    String fr_modelPath = parser.get<String>("fr_model");
+    String fd_modelPath = "models/face_detection_yunet.onnx";
+    String fr_modelPath = "models/face_recognition_sface.onnx";
 
     float scoreThreshold = parser.get<float>("score_threshold");
     float nmsThreshold = parser.get<float>("nms_threshold");
