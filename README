@@ -3,7 +3,7 @@ Jessie Yuen, Umanga Bajgai
 
 ## Project Description
 Reference: https://docs.opencv.org/4.13.0/d0/dd4/tutorial_dnn_face.html 
-Building on the refrence code.
+Building on the reference code.
 
 ## Project Scope
 Build a C++ OpenCV DNN based face recognition application (potential application is punch-in punch-out of the employees starting and ending work shifts).
