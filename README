@@ -18,3 +18,6 @@ Build a C++ OpenCV DNN based face recognition application (potential application
 ## How to run:
 Pull the project, and install the dependencies:
     sudo apt install libopencv-dev
+    
+Run:
+    make
