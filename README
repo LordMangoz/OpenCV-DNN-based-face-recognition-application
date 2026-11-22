@@ -3,7 +3,7 @@ Jessie Yuen, Umanga Bajgai
 
 ## Project Description
 Reference: https://docs.opencv.org/4.13.0/d0/dd4/tutorial_dnn_face.html 
-Building on the reference code.
+Building on the reference code above.
 
 ## Project Scope
 Build a C++ OpenCV DNN based face recognition application (potential application is punch-in punch-out of the employees starting and ending work shifts).
@@ -14,3 +14,7 @@ Build a C++ OpenCV DNN based face recognition application (potential application
 - Port your solution to Raspberry Pi 
 - Port your solution tp Nvidia’s Jetson Orin 
 - Enhance your solution to integrate motion detection to optimize camera usage. 
+
+## How to run:
+Pull the project.
+Run: sudo apt install libopencv-dev
