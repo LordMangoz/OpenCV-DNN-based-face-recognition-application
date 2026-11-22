@@ -16,5 +16,5 @@ Build a C++ OpenCV DNN based face recognition application (potential application
 - Enhance your solution to integrate motion detection to optimize camera usage. 
 
 ## How to run:
-Pull the project.
-Run: sudo apt install libopencv-dev
+Pull the project, and install the dependencies:
+    sudo apt install libopencv-dev
