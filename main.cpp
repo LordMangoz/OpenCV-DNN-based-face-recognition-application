@@ -9,21 +9,20 @@
 using namespace cv;
 using namespace std;
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     CommandLineParser parser(argc, argv,
-        "{help  h           |            | Print this message}"
-        "{image1 i1         |            | Path to the input image1. Omit for detecting through VideoCapture}"
-        "{image2 i2         |            | Path to the input image2. When image1 and image2 parameters given then the program try to find a face on both images and runs face recognition algorithm}"
-        "{video v           | 0          | Path to the input video}"
-        "{scale sc          | 1.0        | Scale factor used to resize input video frames}"
-        "{fd_model fd       | face_detection_yunet_2021dec.onnx| Path to the model. Download yunet.onnx in https://github.com/opencv/opencv_zoo/tree/master/models/face_detection_yunet}"
-        "{fr_model fr       | face_recognition_sface_2021dec.onnx | Path to the face recognition model. Download the model at https://github.com/opencv/opencv_zoo/tree/master/models/face_recognition_sface}"
-        "{score_threshold   | 0.9        | Filter out faces of score < score_threshold}"
-        "{nms_threshold     | 0.3        | Suppress bounding boxes of iou >= nms_threshold}"
-        "{top_k             | 5000       | Keep top_k bounding boxes before NMS}"
-        "{save s            | false      | Set true to save results. This flag is invalid when using camera}"
-    );
+                             "{help  h           |            | Print this message}"
+                             "{image1 i1         |            | Path to the input image1. Omit for detecting through VideoCapture}"
+                             "{image2 i2         |            | Path to the input image2. When image1 and image2 parameters given then the program try to find a face on both images and runs face recognition algorithm}"
+                             "{video v           | 0          | Path to the input video}"
+                             "{scale sc          | 1.0        | Scale factor used to resize input video frames}"
+                             "{fd_model fd       | face_detection_yunet_2021dec.onnx| Path to the model. Download yunet.onnx in https://github.com/opencv/opencv_zoo/tree/master/models/face_detection_yunet}"
+                             "{fr_model fr       | face_recognition_sface_2021dec.onnx | Path to the face recognition model. Download the model at https://github.com/opencv/opencv_zoo/tree/master/models/face_recognition_sface}"
+                             "{score_threshold   | 0.9        | Filter out faces of score < score_threshold}"
+                             "{nms_threshold     | 0.3        | Suppress bounding boxes of iou >= nms_threshold}"
+                             "{top_k             | 5000       | Keep top_k bounding boxes before NMS}"
+                             "{save s            | false      | Set true to save results. This flag is invalid when using camera}");
     if (parser.has("help"))
     {
         parser.printMessage();
@@ -92,7 +91,7 @@ int main(int argc, char** argv)
 
         // Visualize results
         imshow("image1", image1);
-        pollKey();  // handle UI events to show content
+        pollKey(); // handle UI events to show content
 
         if (parser.has("image2"))
         {
@@ -129,7 +128,6 @@ int main(int argc, char** argv)
             // Initialize FaceRecognizerSF
             Ptr<FaceRecognizerSF> faceRecognizer = FaceRecognizerSF::create(fr_modelPath, "");
             //! [initialize_FaceRecognizerSF]
-
 
             //! [facerecognizer]
             // Aligning and cropping facial image through the first face of faces detected.
@@ -178,18 +176,27 @@ int main(int argc, char** argv)
         int frameWidth, frameHeight;
         VideoCapture capture;
         std::string video = parser.get<string>("video");
+
         if (video.size() == 1 && isdigit(video[0]))
-            capture.open(parser.get<int>("video"));
+        {
+            capture.open(parser.get<int>("video"), CAP_V4L2);
+
+            capture.set(CAP_PROP_FOURCC,
+                        VideoWriter::fourcc('M', 'J', 'P', 'G'));
+            capture.set(CAP_PROP_FRAME_WIDTH, 640);
+            capture.set(CAP_PROP_FRAME_HEIGHT, 480);
+            capture.set(CAP_PROP_FPS, 30);
+        }
         else
-            capture.open(samples::findFileOrKeep(video));  // keep GStreamer pipelines
+            capture.open(samples::findFileOrKeep(video)); // keep GStreamer pipelines
         if (capture.isOpened())
         {
             frameWidth = int(capture.get(CAP_PROP_FRAME_WIDTH) * scale);
             frameHeight = int(capture.get(CAP_PROP_FRAME_HEIGHT) * scale);
             cout << "Video " << video
-                << ": width=" << frameWidth
-                << ", height=" << frameHeight
-                << endl;
+                 << ": width=" << frameWidth
+                 << ", height=" << frameHeight
+                 << endl;
         }
         else
         {
@@ -231,7 +238,7 @@ int main(int argc, char** argv)
             if (key == ' ')
             {
                 saveFrame = true;
-                key = 0;  // handled
+                key = 0; // handled
             }
 
             if (saveFrame)
