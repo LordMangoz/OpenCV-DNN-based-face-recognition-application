@@ -38,3 +38,112 @@ Assign the closest known identity if its simlilarity passes the threshold, or re
 
 Benchmark by measuring how long it takes to enroll subjects and recognize a new face.
 Track correct/incorrect matches and unknown faces.
+
+## Webcam Setup (WSL Ubuntu)
+
+This project uses a Logitech C270 HD webcam connected to Windows and forwarded to WSL Ubuntu using `usbipd-win`.
+
+### 1. Connect the webcam
+
+Plug the Logitech C270 webcam into the computer.
+
+Open **Windows PowerShell** and check its USB bus ID:
+
+```powershell
+usbipd list
+```
+
+The webcam was previously identified with BUSID `2-2`, but this may change after reconnecting it.
+
+If the webcam shows `Not shared`, open **PowerShell as Administrator** and run:
+
+```powershell
+usbipd bind --busid 2-2 --force
+```
+
+The `--force` option was required because of a USBPcap compatibility warning. Binding is unnecessary again if the webcam is already shared.
+
+### 2. Attach the webcam to WSL
+
+Start WSL Ubuntu in Powershell admin mode:
+
+```powershell
+wsl
+```
+
+Keep Ubuntu running, then in a separate **Windows PowerShell** window, run:
+
+```powershell
+usbipd attach --wsl --busid 2-2
+```
+
+Use the current BUSID from `usbipd list` if it has changed.
+
+### 3. Verify the webcam in Ubuntu
+
+In the **Ubuntu terminal**, run:
+
+```bash
+lsusb
+ls -l /dev/video*
+```
+
+The webcam should appear as Logitech C270 (`046d:0825`), with `/dev/video0` available.
+
+Check the video device:
+
+```bash
+v4l2-ctl --device=/dev/video0 --all
+```
+
+If some permission error occurs, check membership in the `video` group:
+
+```bash
+groups
+```
+
+If necessary, add the user to the group and start a shell with the new group:
+
+```bash
+sudo usermod -aG video $USER
+newgrp video
+```
+
+### 4. Configure webcam capture
+
+The webcam was successfully tested using MJPEG at 320 × 240 resolution (troubleshot with lower res here).
+
+```bash
+v4l2-ctl --device=/dev/video0 --set-fmt-video=width=320,height=240,pixelformat=MJPG
+```
+
+(OpenCV may negotiate its own capture settings when the application starts.)
+
+### 5. Run the face detection application
+
+In **Ubuntu**:
+
+```bash
+cd ~/OpenCV-DNN-based-face-recognition-application
+./face_recognition
+```
+
+The application should display live webcam video with face detection rectangles and facial landmarks. Multiple faces were successfully detected during testing.
+
+### 6. Disconnect the webcam when finished
+
+In **Windows PowerShell**:
+
+```powershell
+usbipd detach --busid 2-2
+```
+
+Shut down WSL completely:
+
+```powershell
+wsl --shutdown
+```
+
+Can safely unplug webcam afterwards.
+
+*Note to self: need to check for recognition next, then use test data (took 20+ photos of Umanga/Kian/Thien), then port solution.
